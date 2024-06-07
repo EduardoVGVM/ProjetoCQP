@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.projetopratico.cqp.models.CarroDetalhes;
 
 @Repository
-public interface CarroDetalhesRepository extends JpaRepository<CarroDetalhes, Long>{ 
+public interface CarroDetalhesRepository extends JpaRepository<CarroDetalhes, Integer>{ 
 }

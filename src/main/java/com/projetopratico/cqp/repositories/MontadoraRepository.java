@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.projetopratico.cqp.models.Montadora;
 
 @Repository
-public interface MontadoraRepository extends JpaRepository<Montadora, Long>{   
+public interface MontadoraRepository extends JpaRepository<Montadora, Integer>{   
 }
