@@ -10,15 +10,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Builder
+@SuperBuilder
 @Table(name = "Carro")
 public class Carro extends EntidadeBase {
 
@@ -40,4 +40,9 @@ public class Carro extends EntidadeBase {
     @OneToOne(mappedBy = "CarroDetalhes")
     @JsonBackReference
     private CarroDetalhes carroDetalhes;
+
+    public void hello() {
+        Carro novoCarro = new Carro();
+        System.out.println(novoCarro.getId());
+    }
 }
