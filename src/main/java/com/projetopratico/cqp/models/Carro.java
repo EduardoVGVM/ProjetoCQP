@@ -1,91 +1,43 @@
 package com.projetopratico.cqp.models;
 
 import java.text.DecimalFormat;
-import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Builder
+@Table(name = "Carro")
 public class Carro extends EntidadeBase {
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "Nome")
     private String Nome;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "Modelo")
     private String Modelo;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "Cor")
     private String Cor;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "Preco")
     private DecimalFormat Preco;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "URLimagem")
     private String URLimagem;
 
     @ManyToOne
     @JsonBackReference
     private Montadora montadora;
 
-    public Carro() {
-    }
-
-    public Carro(int id, Date dataCriacao, Date dataAtualizacao, String nome, String modelo, String cor,
-            DecimalFormat preco, String uRLimagem, Montadora montadora) {
-        super(id, dataCriacao, dataAtualizacao);
-        Nome = nome;
-        Modelo = modelo;
-        Cor = cor;
-        Preco = preco;
-        URLimagem = uRLimagem;
-        this.montadora = montadora;
-    }
-
-    public String getNome() {
-        return Nome;
-    }
-
-    public void setNome(String nome) {
-        Nome = nome;
-    }
-
-    public String getModelo() {
-        return Modelo;
-    }
-
-    public void setModelo(String modelo) {
-        Modelo = modelo;
-    }
-
-    public String getCor() {
-        return Cor;
-    }
-
-    public void setCor(String cor) {
-        Cor = cor;
-    }
-
-    public DecimalFormat getPreco() {
-        return Preco;
-    }
-
-    public void setPreco(DecimalFormat preco) {
-        Preco = preco;
-    }
-
-    public String getURLimagem() {
-        return URLimagem;
-    }
-
-    public void setURLimagem(String uRLimagem) {
-        URLimagem = uRLimagem;
-    }
-
-    public Montadora getMontadora() {
-        return montadora;
-    }
-
-    public void setMontadora(Montadora montadora) {
-        this.montadora = montadora;
-    }
+    @OneToOne(mappedBy = "CarroDetalhes")
+    @JsonBackReference
+    private CarroDetalhes carroDetalhes;
 }
