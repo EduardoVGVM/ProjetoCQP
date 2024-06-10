@@ -3,6 +3,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 import com.projetopratico.cqp.models.Carro;
+import com.projetopratico.cqp.models.Montadora;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -34,8 +35,11 @@ public class CarroDTO {
     @NotBlank
     @Size(min = 2, max = 100)
     private String URLimagem;
+    @NotBlank
+    private int Montadora_Id;
 
-    public Carro toEntity() {
+
+    public Carro toEntity(Montadora montadora) {
         return Carro.builder()
                 .Nome(this.Nome)
                 .Modelo(this.Modelo)
@@ -44,10 +48,11 @@ public class CarroDTO {
                 .URLimagem(this.URLimagem)
                 .DataCriacao(LocalDate.now())
                 .DataAtualizacao(LocalDate.now())
+                .montadora(montadora)
                 .build();
     }
 
-    public Carro toEntityUpdate(Carro carro) {
+    public Carro toEntityUpdate(Carro carro, Montadora montadora) {
         return Carro.builder()
                 .Id(carro.getId())
                 .Nome(this.Nome)
@@ -57,6 +62,7 @@ public class CarroDTO {
                 .URLimagem(this.URLimagem)
                 .DataCriacao(carro.getDataCriacao())
                 .DataAtualizacao(LocalDate.now())
+                .montadora(montadora)
                 .build();
     }
 }

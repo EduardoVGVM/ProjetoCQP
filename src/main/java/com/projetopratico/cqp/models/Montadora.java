@@ -23,7 +23,7 @@ public class Montadora extends EntidadeBase{
     @Column(nullable = false, name = "Nome")
     private String Nome;
 
-    @OneToMany(mappedBy = "Carro")
+    @OneToMany(mappedBy = "montadora")
     @JsonBackReference
     private List<Carro> carros;
 }

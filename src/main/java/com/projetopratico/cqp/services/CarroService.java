@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.projetopratico.cqp.dto.CarroDTO;
 import com.projetopratico.cqp.models.Carro;
+import com.projetopratico.cqp.models.Montadora;
 import com.projetopratico.cqp.repositories.CarroRepository;
+import com.projetopratico.cqp.repositories.MontadoraRepository;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -17,10 +19,16 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class CarroService {
     private final CarroRepository carroRepository;
+    private final MontadoraRepository montadoraRepository;
 
     public Carro create(CarroDTO carroDTO) {
-        Carro carro = carroDTO.toEntity();
-        return this.carroRepository.save(carro);
+        Montadora montadora = this.montadoraRepository.findById(carroDTO.getMontadora_Id()).orElse(null);
+
+        if (montadora != null) {
+            Carro carro = carroDTO.toEntity(montadora);
+            return this.carroRepository.save(carro);
+        }
+        return null;
     }
 
     public List<Carro> listAll() {
@@ -34,9 +42,12 @@ public class CarroService {
 
     public Carro update(int Id, @Valid CarroDTO carroDTO) {
         Carro carro = this.carroRepository.findById(Id).orElse(null);
-        if (carro != null) {
-            Carro updateCarro = carroDTO.toEntityUpdate(carro);
-            return this.carroRepository.save(updateCarro);
+        Montadora montadora = this.montadoraRepository.findById(carroDTO.getMontadora_Id()).orElse(null);
+
+        if (carro != null && montadora != null) {
+            carro.setMontadora(montadora);
+            carro = carroDTO.toEntityUpdate(carro, montadora);
+            return this.carroRepository.save(carro);
         }
         return null;
     }

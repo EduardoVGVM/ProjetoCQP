@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.projetopratico.cqp.dto.CarroDetalhesDTO;
 import com.projetopratico.cqp.models.CarroDetalhes;
+import com.projetopratico.cqp.models.Carro;
 import com.projetopratico.cqp.repositories.CarroDetalhesRepository;
+import com.projetopratico.cqp.repositories.CarroRepository;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -17,10 +19,16 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class CarroDetalhesService {
     private final CarroDetalhesRepository carroDetalhesRepository;
+    private final CarroRepository carroRepository;
 
     public CarroDetalhes create(CarroDetalhesDTO carroDetalhesDTO) {
-        CarroDetalhes carroDetalhes = carroDetalhesDTO.toEntity();
-        return this.carroDetalhesRepository.save(carroDetalhes);
+        Carro carro = this.carroRepository.findById(carroDetalhesDTO.getCarro_Id()).orElse(null);
+
+        if (carro != null) {
+            CarroDetalhes carroDetalhes = carroDetalhesDTO.toEntity(carro);
+            return this.carroDetalhesRepository.save(carroDetalhes);
+        }
+        return null;
     }
 
     public List<CarroDetalhes> listAll() {
@@ -33,10 +41,13 @@ public class CarroDetalhesService {
     }
 
     public CarroDetalhes update(int Id, @Valid CarroDetalhesDTO carroDetalhesDTO) {
-        CarroDetalhes carroDetalhes = carroDetalhesRepository.findById(Id).orElse(null);
-        if (carroDetalhes != null) {
-            CarroDetalhes updateCarroDetalhes = carroDetalhesDTO.toEntityUpdate(carroDetalhes);
-            return this.carroDetalhesRepository.save(updateCarroDetalhes);
+        CarroDetalhes carroDetalhes = this.carroDetalhesRepository.findById(Id).orElse(null);
+        Carro carro = this.carroRepository.findById(carroDetalhesDTO.getCarro_Id()).orElse(null);
+
+        if( carroDetalhes != null && carro != null) {
+            carroDetalhes.setCarro(carro);
+            carroDetalhes = carroDetalhesDTO.toEntityUpdate(carroDetalhes, carro);
+            return this.carroDetalhesRepository.save(carroDetalhes);
         }
         return null;
     }

@@ -2,6 +2,7 @@ package com.projetopratico.cqp.dto;
 
 import java.time.LocalDate;
 
+import com.projetopratico.cqp.models.Carro;
 import com.projetopratico.cqp.models.CarroDetalhes;
 
 import jakarta.validation.constraints.NotBlank;
@@ -34,8 +35,10 @@ public class CarroDetalhesDTO {
     @NotBlank
     @Size(min = 2, max = 255)
     private String xpathURLimagem;
+    @NotBlank
+    private int Carro_Id;
 
-    public CarroDetalhes toEntity() {
+    public CarroDetalhes toEntity(Carro carro) {
         return CarroDetalhes.builder()
                 .URLDetalhes(this.URLDetalhes)
                 .xpathNome(this.xpathNome)
@@ -45,10 +48,11 @@ public class CarroDetalhesDTO {
                 .xpathURLimagem(this.xpathURLimagem)
                 .DataCriacao(LocalDate.now())
                 .DataAtualizacao(LocalDate.now())
+                .carro(carro)
                 .build();
     }
 
-    public CarroDetalhes toEntityUpdate(CarroDetalhes carroDetalhes) {
+    public CarroDetalhes toEntityUpdate(CarroDetalhes carroDetalhes, Carro carro) {
         return CarroDetalhes.builder()
                 .Id(carroDetalhes.getId())
                 .URLDetalhes(this.URLDetalhes)
@@ -59,6 +63,7 @@ public class CarroDetalhesDTO {
                 .xpathURLimagem(this.xpathURLimagem)
                 .DataCriacao(carroDetalhes.getDataCriacao())
                 .DataAtualizacao(LocalDate.now())
+                .carro(carro)
                 .build();
     }
 }

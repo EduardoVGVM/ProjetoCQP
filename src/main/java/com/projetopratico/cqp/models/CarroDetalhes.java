@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,7 @@ public class CarroDetalhes extends EntidadeBase {
     private String xpathURLimagem;
 
     @OneToOne
+    @JoinColumn(nullable = false)
     @JsonBackReference
     private Carro carro;
 }
