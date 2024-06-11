@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -39,7 +40,7 @@ public class Carro extends EntidadeBase {
     @JsonBackReference
     private Montadora montadora;
 
-    @OneToOne(mappedBy = "carro")
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "carro")
     @JsonBackReference
     private CarroDetalhes carroDetalhes;
 }
