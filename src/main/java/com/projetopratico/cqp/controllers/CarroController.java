@@ -39,7 +39,7 @@ public class CarroController {
         return new ResponseEntity<>(carro, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{Id}")
     public ResponseEntity<Carro> getById(@PathVariable int Id) {
         Carro carro = this.carroService.getById(Id);
         if (carro != null) {
@@ -48,7 +48,7 @@ public class CarroController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{Id}")
     public ResponseEntity<Carro> update(@PathVariable int Id, @RequestBody @Valid CarroDTO carroDTO) {
         Carro carro = carroService.update(Id, carroDTO);
         if (carro != null) {
@@ -57,7 +57,7 @@ public class CarroController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{Id}")
     public ResponseEntity<?> delete(@PathVariable int Id) {
         if (carroService.delete(Id)) {
             return new ResponseEntity<>(HttpStatus.OK);

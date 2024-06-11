@@ -39,7 +39,7 @@ public class CarroDetalhesController {
         return new ResponseEntity<>(carroDetalhes, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{Id}")
     public ResponseEntity<CarroDetalhes> getById(@PathVariable int Id) {
         CarroDetalhes carroDetalhes = this.carroDetalhesService.getById(Id);
         if (carroDetalhes != null) {
@@ -48,7 +48,7 @@ public class CarroDetalhesController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{Id}")
     public ResponseEntity<CarroDetalhes> update(@PathVariable int Id,
             @RequestBody @Valid CarroDetalhesDTO carroDetalhesDTO) {
         CarroDetalhes carroDetalhes = carroDetalhesService.update(Id, carroDetalhesDTO);
@@ -58,7 +58,7 @@ public class CarroDetalhesController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{Id}")
     public ResponseEntity<?> delete(@PathVariable int Id) {
         if (carroDetalhesService.delete(Id)) {
             return new ResponseEntity<>(HttpStatus.OK);
