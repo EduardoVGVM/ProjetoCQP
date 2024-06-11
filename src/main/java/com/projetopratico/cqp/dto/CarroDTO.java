@@ -1,11 +1,10 @@
 package com.projetopratico.cqp.dto;
-import java.text.DecimalFormat;
+
 import java.time.LocalDate;
 
 import com.projetopratico.cqp.models.Carro;
 import com.projetopratico.cqp.models.Montadora;
 
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -22,46 +21,44 @@ public class CarroDTO {
 
     @NotBlank
     @Size(min = 2, max = 100)
-    private String Nome;
+    private String nome;
     @NotBlank
     @Size(min = 2, max = 100)
-    private String Modelo;
+    private String modelo;
     @NotBlank
     @Size(min = 2, max = 100)
-    private String Cor;
+    private String cor;
     @NotNull
-    @DecimalMin(value = "0.0")
-    private DecimalFormat Preco;
+    private double preco;
     @NotBlank
     @Size(min = 2, max = 100)
-    private String URLimagem;
-    @NotBlank
-    private int Montadora_Id;
-
+    private String urlImagem;
+    @NotNull
+    private int montadora_id;
 
     public Carro toEntity(Montadora montadora) {
         return Carro.builder()
-                .Nome(this.Nome)
-                .Modelo(this.Modelo)
-                .Cor(this.Cor)
-                .Preco(this.Preco)
-                .URLimagem(this.URLimagem)
-                .DataCriacao(LocalDate.now())
-                .DataAtualizacao(LocalDate.now())
+                .nome(this.nome)
+                .modelo(this.modelo)
+                .cor(this.cor)
+                .preco(this.preco)
+                .urlImagem(this.urlImagem)
+                .dataCriacao(LocalDate.now())
+                .dataAtualizacao(LocalDate.now())
                 .montadora(montadora)
                 .build();
     }
 
     public Carro toEntityUpdate(Carro carro, Montadora montadora) {
         return Carro.builder()
-                .Id(carro.getId())
-                .Nome(this.Nome)
-                .Modelo(this.Modelo)
-                .Cor(this.Cor)
-                .Preco(this.Preco)
-                .URLimagem(this.URLimagem)
-                .DataCriacao(carro.getDataCriacao())
-                .DataAtualizacao(LocalDate.now())
+                .id(carro.getId())
+                .nome(this.nome)
+                .modelo(this.modelo)
+                .cor(this.cor)
+                .preco(this.preco)
+                .urlImagem(this.urlImagem)
+                .dataCriacao(carro.getDataCriacao())
+                .dataAtualizacao(LocalDate.now())
                 .montadora(montadora)
                 .build();
     }

@@ -21,10 +21,10 @@ public abstract class EntidadeBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Id;
-    @Column(nullable = false, name = "DataCriacao")
-    private LocalDate DataCriacao;
-    @Column(nullable = false, name = "DataAtualizacao")
-    private LocalDate DataAtualizacao;
+    private int id;
+    @Column(nullable = false, name = "dataCriacao")
+    private LocalDate dataCriacao;
+    @Column(nullable = false, name = "dataAtualizacao")
+    private LocalDate dataAtualizacao;
 
 }

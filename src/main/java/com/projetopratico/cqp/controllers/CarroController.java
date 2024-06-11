@@ -35,31 +35,31 @@ public class CarroController {
 
     @PostMapping
     public ResponseEntity<Carro> create(@RequestBody @Valid CarroDTO carroDTO) {
-        Carro carro = carroService.create(carroDTO);
-        return new ResponseEntity<>(carro, HttpStatus.CREATED);
+        Carro Carro = carroService.create(carroDTO);
+        return new ResponseEntity<>(Carro, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{Id}")
-    public ResponseEntity<Carro> getById(@PathVariable int Id) {
-        Carro carro = this.carroService.getById(Id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Carro> getById(@PathVariable int id) {
+        Carro carro = this.carroService.getById(id);
         if (carro != null) {
             return new ResponseEntity<>(carro, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/{Id}")
-    public ResponseEntity<Carro> update(@PathVariable int Id, @RequestBody @Valid CarroDTO carroDTO) {
-        Carro carro = carroService.update(Id, carroDTO);
+    @PutMapping("/{id}")
+    public ResponseEntity<Carro> update(@PathVariable int id, @RequestBody @Valid CarroDTO carroDTO) {
+        Carro carro = carroService.update(id, carroDTO);
         if (carro != null) {
             return new ResponseEntity<>(carro, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/{Id}")
-    public ResponseEntity<?> delete(@PathVariable int Id) {
-        if (carroService.delete(Id)) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable int id) {
+        if (carroService.delete(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

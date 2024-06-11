@@ -22,7 +22,7 @@ public class CarroService {
     private final MontadoraRepository montadoraRepository;
 
     public Carro create(CarroDTO carroDTO) {
-        Montadora montadora = this.montadoraRepository.findById(carroDTO.getMontadora_Id()).orElse(null);
+        Montadora montadora = this.montadoraRepository.findById(carroDTO.getMontadora_id()).orElse(null);
 
         if (montadora != null) {
             Carro carro = carroDTO.toEntity(montadora);
@@ -36,13 +36,13 @@ public class CarroService {
         return carros.stream().collect(Collectors.toList());
     }
 
-    public Carro getById(int Id) {
-        return this.carroRepository.findById(Id).orElse(null);
+    public Carro getById(int id) {
+        return this.carroRepository.findById(id).orElse(null);
     }
 
-    public Carro update(int Id, @Valid CarroDTO carroDTO) {
-        Carro carro = this.carroRepository.findById(Id).orElse(null);
-        Montadora montadora = this.montadoraRepository.findById(carroDTO.getMontadora_Id()).orElse(null);
+    public Carro update(int id, @Valid CarroDTO carroDTO) {
+        Carro carro = this.carroRepository.findById(id).orElse(null);
+        Montadora montadora = this.montadoraRepository.findById(carroDTO.getMontadora_id()).orElse(null);
 
         if (carro != null && montadora != null) {
             carro.setMontadora(montadora);
@@ -52,8 +52,8 @@ public class CarroService {
         return null;
     }
 
-    public boolean delete(int Id) {
-        Carro carro = this.carroRepository.findById(Id).orElse(null);
+    public boolean delete(int id) {
+        Carro carro = this.carroRepository.findById(id).orElse(null);
         if (carro != null) {
             this.carroRepository.delete(carro);
             return true;

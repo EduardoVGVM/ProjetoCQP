@@ -39,27 +39,27 @@ public class MontadoraController {
         return new ResponseEntity<>(montadora, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{Id}")
-    public ResponseEntity<Montadora> getById(@PathVariable int Id) {
-        Montadora montadora = this.montadoraService.getById(Id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Montadora> getById(@PathVariable int id) {
+        Montadora montadora = this.montadoraService.getById(id);
         if (montadora != null) {
             return new ResponseEntity<>(montadora, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/{Id}")
-    public ResponseEntity<Montadora> update(@PathVariable int Id, @RequestBody @Valid MontadoraDTO montadoraDTO) {
-        Montadora montadora = montadoraService.update(Id, montadoraDTO);
-        if(montadora != null) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Montadora> update(@PathVariable int id, @RequestBody @Valid MontadoraDTO montadoraDTO) {
+        Montadora montadora = montadoraService.update(id, montadoraDTO);
+        if (montadora != null) {
             return new ResponseEntity<>(montadora, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/{Id}")
-    public ResponseEntity<?> delete(@PathVariable int Id) {
-        if(montadoraService.delete(Id)) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable int id) {
+        if (montadoraService.delete(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

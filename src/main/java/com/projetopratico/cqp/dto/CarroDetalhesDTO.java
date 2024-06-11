@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class CarroDetalhesDTO {
     @NotBlank
     @Size(min = 2, max = 255)
-    private String URLDetalhes;
+    private String urlDetalhes;
     @NotBlank
     @Size(min = 2, max = 255)
     private String xpathNome;
@@ -34,35 +34,35 @@ public class CarroDetalhesDTO {
     private String xpathPreco;
     @NotBlank
     @Size(min = 2, max = 255)
-    private String xpathURLimagem;
+    private String xpathUrlImagem;
     @NotBlank
-    private int Carro_Id;
+    private int carro_id;
 
     public CarroDetalhes toEntity(Carro carro) {
         return CarroDetalhes.builder()
-                .URLDetalhes(this.URLDetalhes)
+                .urlDetalhes(urlDetalhes)
                 .xpathNome(this.xpathNome)
                 .xpathModelo(this.xpathModelo)
                 .xpathCor(this.xpathCor)
                 .xpathPreco(this.xpathPreco)
-                .xpathURLimagem(this.xpathURLimagem)
-                .DataCriacao(LocalDate.now())
-                .DataAtualizacao(LocalDate.now())
+                .xpathUrlImagem(xpathUrlImagem)
+                .dataCriacao(LocalDate.now())
+                .dataAtualizacao(LocalDate.now())
                 .carro(carro)
                 .build();
     }
 
     public CarroDetalhes toEntityUpdate(CarroDetalhes carroDetalhes, Carro carro) {
         return CarroDetalhes.builder()
-                .Id(carroDetalhes.getId())
-                .URLDetalhes(this.URLDetalhes)
+                .id(carroDetalhes.getId())
+                .urlDetalhes(urlDetalhes)
                 .xpathNome(this.xpathNome)
                 .xpathModelo(this.xpathModelo)
                 .xpathCor(this.xpathCor)
                 .xpathPreco(this.xpathPreco)
-                .xpathURLimagem(this.xpathURLimagem)
-                .DataCriacao(carroDetalhes.getDataCriacao())
-                .DataAtualizacao(LocalDate.now())
+                .xpathUrlImagem(xpathUrlImagem)
+                .dataCriacao(carroDetalhes.getDataCriacao())
+                .dataAtualizacao(LocalDate.now())
                 .carro(carro)
                 .build();
     }

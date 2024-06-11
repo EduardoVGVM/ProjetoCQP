@@ -28,12 +28,12 @@ public class MontadoraService {
         return montadoras.stream().collect(Collectors.toList());
     }
 
-    public Montadora getById(int Id) {
-        return this.montadoraRepository.findById(Id).orElse(null);
+    public Montadora getById(int id) {
+        return this.montadoraRepository.findById(id).orElse(null);
     }
 
-    public Montadora update(int Id, @Valid MontadoraDTO montadoraDTO) {
-        Montadora montadora = montadoraRepository.findById(Id).orElse(null);
+    public Montadora update(int id, @Valid MontadoraDTO montadoraDTO) {
+        Montadora montadora = montadoraRepository.findById(id).orElse(null);
         if (montadora != null) {
             Montadora updateMontadora = montadoraDTO.toEntityUpdate(montadora);
             return this.montadoraRepository.save(updateMontadora);
@@ -41,8 +41,8 @@ public class MontadoraService {
         return null;
     }
 
-    public boolean delete(int Id) {
-        Montadora montadora = this.montadoraRepository.findById(Id).orElse(null);
+    public boolean delete(int id) {
+        Montadora montadora = this.montadoraRepository.findById(id).orElse(null);
         if (montadora != null) {
             this.montadoraRepository.delete(montadora);
             return true;

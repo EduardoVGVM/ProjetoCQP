@@ -19,8 +19,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Table(name = "CarroDetalhes")
 public class CarroDetalhes extends EntidadeBase {
-    @Column(nullable = false, name = "URLDetalhes")
-    private String URLDetalhes;
+    @Column(nullable = false, name = "urlDetalhes")
+    private String urlDetalhes;
     @Column(nullable = false, name = "xpathNome")
     private String xpathNome;
     @Column(nullable = false, name = "xpathModelo")
@@ -29,8 +29,8 @@ public class CarroDetalhes extends EntidadeBase {
     private String xpathCor;
     @Column(nullable = false, name = "xpathPreco")
     private String xpathPreco;
-    @Column(nullable = false, name = "xpathURLimagem")
-    private String xpathURLimagem;
+    @Column(nullable = false, name = "xpathUrlImagem")
+    private String xpathUrlImagem;
 
     @OneToOne
     @JoinColumn(nullable = false)

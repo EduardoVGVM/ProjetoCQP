@@ -1,7 +1,5 @@
 package com.projetopratico.cqp.models;
 
-import java.text.DecimalFormat;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
@@ -24,23 +22,23 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "Carro")
 public class Carro extends EntidadeBase {
 
-    @Column(nullable = false, name = "Nome")
-    private String Nome;
-    @Column(nullable = false, name = "Modelo")
-    private String Modelo;
-    @Column(nullable = false, name = "Cor")
-    private String Cor;
-    @Column(nullable = false, name = "Preco")
-    private DecimalFormat Preco;
-    @Column(nullable = false, name = "URLimagem")
-    private String URLimagem;
+    @Column(nullable = false, name = "nome")
+    private String nome;
+    @Column(nullable = false, name = "modelo")
+    private String modelo;
+    @Column(nullable = false, name = "cor")
+    private String cor;
+    @Column(nullable = false, name = "preco")
+    private double preco;
+    @Column(nullable = false, name = "urlImagem")
+    private String urlImagem;
 
     @ManyToOne
     @JoinColumn(nullable = false)
     @JsonBackReference
     private Montadora montadora;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "carro")
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, mappedBy = "carro")
     @JsonBackReference
     private CarroDetalhes carroDetalhes;
 }

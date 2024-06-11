@@ -20,11 +20,11 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 @Table(name = "Montadora")
-public class Montadora extends EntidadeBase{
-    @Column(nullable = false, name = "Nome")
-    private String Nome;
+public class Montadora extends EntidadeBase {
+    @Column(nullable = false, name = "nome")
+    private String nome;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "montadora")
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, mappedBy = "montadora")
     @JsonBackReference
     private List<Carro> carros;
 }

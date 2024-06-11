@@ -19,22 +19,22 @@ public class MontadoraDTO {
 
     @NotBlank
     @Size(min = 2, max = 100)
-    private String Nome;
+    private String nome;
 
     public Montadora toEntity() {
         return Montadora.builder()
-                .Nome(this.Nome)
-                .DataCriacao(LocalDate.now())
-                .DataAtualizacao(LocalDate.now())
+                .nome(this.nome)
+                .dataCriacao(LocalDate.now())
+                .dataAtualizacao(LocalDate.now())
                 .build();
     }
 
     public Montadora toEntityUpdate(Montadora montadora) {
         return Montadora.builder()
-                .Id(montadora.getId())
-                .Nome(this.Nome)
-                .DataCriacao(montadora.getDataCriacao())
-                .DataAtualizacao(LocalDate.now())
+                .id(montadora.getId())
+                .nome(this.nome)
+                .dataCriacao(montadora.getDataCriacao())
+                .dataAtualizacao(LocalDate.now())
                 .build();
     }
 }

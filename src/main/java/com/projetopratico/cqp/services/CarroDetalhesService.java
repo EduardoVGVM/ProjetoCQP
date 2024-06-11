@@ -22,7 +22,7 @@ public class CarroDetalhesService {
     private final CarroRepository carroRepository;
 
     public CarroDetalhes create(CarroDetalhesDTO carroDetalhesDTO) {
-        Carro carro = this.carroRepository.findById(carroDetalhesDTO.getCarro_Id()).orElse(null);
+        Carro carro = this.carroRepository.findById(carroDetalhesDTO.getCarro_id()).orElse(null);
 
         if (carro != null) {
             CarroDetalhes carroDetalhes = carroDetalhesDTO.toEntity(carro);
@@ -36,15 +36,15 @@ public class CarroDetalhesService {
         return carroDetalhesList.stream().collect(Collectors.toList());
     }
 
-    public CarroDetalhes getById(int Id) {
-        return this.carroDetalhesRepository.findById(Id).orElse(null);
+    public CarroDetalhes getById(int id) {
+        return this.carroDetalhesRepository.findById(id).orElse(null);
     }
 
-    public CarroDetalhes update(int Id, @Valid CarroDetalhesDTO carroDetalhesDTO) {
-        CarroDetalhes carroDetalhes = this.carroDetalhesRepository.findById(Id).orElse(null);
-        Carro carro = this.carroRepository.findById(carroDetalhesDTO.getCarro_Id()).orElse(null);
+    public CarroDetalhes update(int id, @Valid CarroDetalhesDTO carroDetalhesDTO) {
+        CarroDetalhes carroDetalhes = this.carroDetalhesRepository.findById(id).orElse(null);
+        Carro carro = this.carroRepository.findById(carroDetalhesDTO.getCarro_id()).orElse(null);
 
-        if( carroDetalhes != null && carro != null) {
+        if (carroDetalhes != null && carro != null) {
             carroDetalhes.setCarro(carro);
             carroDetalhes = carroDetalhesDTO.toEntityUpdate(carroDetalhes, carro);
             return this.carroDetalhesRepository.save(carroDetalhes);
@@ -52,8 +52,8 @@ public class CarroDetalhesService {
         return null;
     }
 
-    public boolean delete(int Id) {
-        CarroDetalhes carroDetalhes = this.carroDetalhesRepository.findById(Id).orElse(null);
+    public boolean delete(int id) {
+        CarroDetalhes carroDetalhes = this.carroDetalhesRepository.findById(id).orElse(null);
         if (carroDetalhes != null) {
             this.carroDetalhesRepository.delete(carroDetalhes);
             return true;
