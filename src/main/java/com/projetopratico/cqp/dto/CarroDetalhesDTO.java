@@ -6,6 +6,7 @@ import com.projetopratico.cqp.models.Carro;
 import com.projetopratico.cqp.models.CarroDetalhes;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +36,7 @@ public class CarroDetalhesDTO {
     @NotBlank
     @Size(min = 2, max = 255)
     private String xpathUrlImagem;
-    @NotBlank
+    @NotNull
     private int carro_id;
 
     public CarroDetalhes toEntity(Carro carro) {
