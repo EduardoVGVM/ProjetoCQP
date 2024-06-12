@@ -25,7 +25,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
-@Tag(name = "CarroDetlahes", description = "Controlador dos Detalhes")
+@Tag(name = "CarroDetalhes", description = "Controlador dos Detalhes")
 @RestController
 @RequestMapping("/carroDetalhes")
 @AllArgsConstructor(onConstructor = @__(@Autowired))
