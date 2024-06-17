@@ -32,7 +32,7 @@ public class CarroDetalhesService {
     }
 
     public List<CarroDetalhes> listAll() {
-        List<CarroDetalhes> carroDetalhesList = carroDetalhesRepository.findAll();
+        List<CarroDetalhes> carroDetalhesList = carroDetalhesRepository.listAll();
         return carroDetalhesList.stream().collect(Collectors.toList());
     }
 

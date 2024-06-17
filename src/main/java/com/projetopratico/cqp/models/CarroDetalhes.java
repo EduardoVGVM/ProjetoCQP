@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Data
 @SuperBuilder
-@Table(name = "CarroDetalhes")
 public class CarroDetalhes extends EntidadeBase {
     @Column(nullable = false, name = "urlDetalhes")
     private String urlDetalhes;
@@ -32,8 +31,8 @@ public class CarroDetalhes extends EntidadeBase {
     @Column(nullable = false, name = "xpathUrlImagem")
     private String xpathUrlImagem;
 
-    @OneToOne
-    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "carro_id", nullable = false)
     @JsonBackReference
     private Carro carro;
 }
