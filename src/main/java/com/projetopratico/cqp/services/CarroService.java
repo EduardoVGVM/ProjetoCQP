@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.projetopratico.cqp.dto.CarroDTO;
 import com.projetopratico.cqp.models.Carro;
+import com.projetopratico.cqp.models.CarroDetalhes;
 import com.projetopratico.cqp.models.Montadora;
+import com.projetopratico.cqp.repositories.CarroDetalhesRepository;
 import com.projetopratico.cqp.repositories.CarroRepository;
 import com.projetopratico.cqp.repositories.MontadoraRepository;
 
@@ -20,12 +22,15 @@ import lombok.AllArgsConstructor;
 public class CarroService {
     private final CarroRepository carroRepository;
     private final MontadoraRepository montadoraRepository;
+    private final CarroDetalhesRepository carroDetalhesRepository;
 
     public Carro create(CarroDTO carroDTO) {
         Montadora montadora = this.montadoraRepository.findById(carroDTO.getMontadora_id()).orElse(null);
+        CarroDetalhes carroDetalhes = this.carroDetalhesRepository.findById(carroDTO.getCarroDetalhes_id())
+                .orElse(null);
 
-        if (montadora != null) {
-            Carro carro = carroDTO.toEntity(montadora);
+        if (montadora != null && carroDetalhes != null) {
+            Carro carro = carroDTO.toEntity(montadora, carroDetalhes);
             return this.carroRepository.save(carro);
         }
         return null;
@@ -43,10 +48,12 @@ public class CarroService {
     public Carro update(int id, @Valid CarroDTO carroDTO) {
         Carro carro = this.carroRepository.findById(id).orElse(null);
         Montadora montadora = this.montadoraRepository.findById(carroDTO.getMontadora_id()).orElse(null);
+        CarroDetalhes carroDetalhes = this.carroDetalhesRepository.findById(carroDTO.getCarroDetalhes_id())
+                .orElse(null);
 
         if (carro != null && montadora != null) {
             carro.setMontadora(montadora);
-            carro = carroDTO.toEntityUpdate(carro, montadora);
+            carro = carroDTO.toEntityUpdate(carro, montadora, carroDetalhes);
             return this.carroRepository.save(carro);
         }
         return null;

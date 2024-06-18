@@ -1,16 +1,13 @@
 package com.projetopratico.cqp.models;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,7 +36,8 @@ public class Carro extends EntidadeBase {
     @JsonBackReference
     private Montadora montadora;
 
-    @OneToMany(mappedBy = "carro", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "carroDetalhes_id", nullable = false)
     @JsonBackReference
-    private List<CarroDetalhes> carroDetalhes;
+    private CarroDetalhes carroDetalhes;
 }
