@@ -1,0 +1,71 @@
+USE [ProjetoCQP]
+GO
+/****** Object:  Table [dbo].[carro]    Script Date: 17/06/2024 23:40:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[carro](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[data_atualizacao] [date] NOT NULL,
+	[data_criacao] [date] NOT NULL,
+	[cor] [varchar](255) NOT NULL,
+	[modelo] [varchar](255) NOT NULL,
+	[nome] [varchar](255) NOT NULL,
+	[preco] [float] NOT NULL,
+	[url_imagem] [varchar](255) NOT NULL,
+	[carro_detalhes_id] [int] NOT NULL,
+	[montadora_id] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[carro_detalhes]    Script Date: 17/06/2024 23:40:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[carro_detalhes](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[data_atualizacao] [date] NOT NULL,
+	[data_criacao] [date] NOT NULL,
+	[url_detalhes] [varchar](255) NOT NULL,
+	[xpath_cor] [varchar](255) NOT NULL,
+	[xpath_modelo] [varchar](255) NOT NULL,
+	[xpath_nome] [varchar](255) NOT NULL,
+	[xpath_preco] [varchar](255) NOT NULL,
+	[xpath_url_imagem] [varchar](255) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[montadora]    Script Date: 17/06/2024 23:40:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[montadora](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[data_atualizacao] [date] NOT NULL,
+	[data_criacao] [date] NOT NULL,
+	[nome] [varchar](255) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[carro]  WITH CHECK ADD  CONSTRAINT [FK4xb62sqn974esi24kx8d94811] FOREIGN KEY([carro_detalhes_id])
+REFERENCES [dbo].[carro_detalhes] ([id])
+GO
+ALTER TABLE [dbo].[carro] CHECK CONSTRAINT [FK4xb62sqn974esi24kx8d94811]
+GO
+ALTER TABLE [dbo].[carro]  WITH CHECK ADD  CONSTRAINT [FKkbgfh7h0rvrru94yx9gjuvc0j] FOREIGN KEY([montadora_id])
+REFERENCES [dbo].[montadora] ([id])
+GO
+ALTER TABLE [dbo].[carro] CHECK CONSTRAINT [FKkbgfh7h0rvrru94yx9gjuvc0j]
+GO
