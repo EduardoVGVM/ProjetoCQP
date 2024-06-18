@@ -1,9 +1,5 @@
 package com.projetopratico.cqp.models;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,6 +30,5 @@ public class CarroDetalhes extends EntidadeBase {
     private String xpathUrlImagem;
 
     @OneToOne(mappedBy = "carroDetalhes", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
-    private List<Carro> carros;
+    private Carro carro;
 }
