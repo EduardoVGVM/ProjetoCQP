@@ -51,7 +51,7 @@ public class CarroService {
         CarroDetalhes carroDetalhes = this.carroDetalhesRepository.findById(carroDTO.getCarroDetalhes_id())
                 .orElse(null);
 
-        if (carro != null && montadora != null) {
+        if (carro != null && montadora != null && carroDetalhes != null) {
             carro.setMontadora(montadora);
             carro = carroDTO.toEntityUpdate(carro, montadora, carroDetalhes);
             return this.carroRepository.save(carro);
