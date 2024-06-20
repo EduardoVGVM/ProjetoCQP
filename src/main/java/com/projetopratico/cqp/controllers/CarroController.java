@@ -44,8 +44,8 @@ public class CarroController {
     @ApiResponses(value = { @ApiResponse(responseCode = "201", description = "POST com sucesso") })
     @PostMapping
     public ResponseEntity<Carro> create(@RequestBody @Valid CarroDTO carroDTO) {
-        Carro Carro = carroService.create(carroDTO);
-        return new ResponseEntity<>(Carro, HttpStatus.CREATED);
+        Carro carro = carroService.create(carroDTO);
+        return new ResponseEntity<>(carro, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Request GET BY ID", description = "Busca um carro por id")
