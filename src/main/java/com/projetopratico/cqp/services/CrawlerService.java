@@ -1,5 +1,7 @@
 package com.projetopratico.cqp.services;
 
+import java.time.LocalDate;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -7,47 +9,61 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.projetopratico.cqp.models.Carro;
+import com.projetopratico.cqp.models.CarroDetalhes;
+import com.projetopratico.cqp.repositories.CarroDetalhesRepository;
+import com.projetopratico.cqp.repositories.CarroRepository;
+
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class CrawlerService {
+	private final CarroRepository carroRepository;
+	private final CarroDetalhesRepository carroDetalhesRepository;
 
-    public CrawlerService create() {
+	public Carro update(int id) {
+		WebDriver webDriver = new EdgeDriver();
 
-        WebDriver webDriver = new EdgeDriver();
-        try {
-            webDriver.navigate().to("https://www.toyota.com.br/modelos/yaris-hatch");
+		try {
+			Carro carro = this.carroRepository.findById(id).orElse(null);
+			CarroDetalhes carroDetalhes = this.carroDetalhesRepository.findById(carro.getCarroDetalhes().getId()).orElse(null);
 
-            // Example
-            WebElement nameElement = webDriver
-                    .findElement(By.xpath("//*[@id=\"dynamic-component-0\"]/div[2]/section/div/section[1]/div[1]/p"));
-            String nome = nameElement.getText();
+			if (carro != null && carroDetalhes != null) {
+				webDriver.navigate().to(carroDetalhes.getUrlDetalhes());
+				String nomeUpdate = getText(webDriver, carroDetalhes.getXpathNome());
+				String modeloUpdate = getText(webDriver, carroDetalhes.getXpathModelo());
+				String corUpdate = getText(webDriver, carroDetalhes.getXpathCor());
+				Double precoUpdate = getDouble(webDriver, carroDetalhes.getXpathPreco());
+				String urlImagemUpdate = getSrc(webDriver, carroDetalhes.getXpathUrlImagem());
 
-            // Modelo
-            WebElement modelElement = webDriver.findElement(By.xpath(
-                    "//*[@id=\"dynamic-component-0\"]/div[2]/section/div/section[1]/div[2]/div/div/div/div/div[1]/div/div/button"));
-            System.out.println(modelElement.getText());
+				carro.setNome(nomeUpdate);
+				carro.setModelo(modeloUpdate);
+				carro.setCor(corUpdate);
+				carro.setPreco(precoUpdate);
+				carro.setUrlImagem(urlImagemUpdate);
+				carro.setDataAtualizacao(LocalDate.now());
+				return this.carroRepository.save(carro);
+			}
+			return null;
+		} finally {
+			webDriver.quit();
+		}
+	}
 
-            // Preço
-            WebElement priceElement = webDriver.findElement(By
-                    .xpath("//*[@id=\"dynamic-component-0\"]/div[2]/section/div/section[2]/div/div[1]/div[3]/span[2]"));
-            System.out.println(priceElement.getText());
+	private String getText(WebDriver webDriver, String xpath) {
+		WebElement element = webDriver.findElement(By.xpath(xpath));
+		return element.getText();
+	}
 
-            // Cor
-            WebElement colorElement = webDriver.findElement(By.xpath(
-                    "//*[@id=\"dynamic-component-0\"]/div[2]/section/div/section[2]/div/div[1]/div[1]/div[2]/div[2]/span"));
-            System.out.println(colorElement.getText());
+	private Double getDouble(WebDriver webDriver, String xpath) {
+		WebElement element = webDriver.findElement(By.xpath(xpath));
+		return Double.parseDouble(element.getText().replaceAll("[^\\d,]", "").replace(",", "."));
+	}
 
-            // Imagem
-            WebElement imageElement = webDriver
-                    .findElement(By.xpath(
-                            "//*[@id=\"dynamic-component-4\"]/section/ul/li[1]/div[1]/div/img"));
-            System.out.println(imageElement.getAttribute("src"));
+	private String getSrc(WebDriver webDriver, String xpath) {
+		WebElement element = webDriver.findElement(By.xpath(xpath));
+		return element.getAttribute("src");
+	}
 
-            return null;
-        } finally {
-            webDriver.quit();
-        }
-    }
 }
