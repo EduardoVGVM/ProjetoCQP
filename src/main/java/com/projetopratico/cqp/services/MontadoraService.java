@@ -1,9 +1,11 @@
 package com.projetopratico.cqp.services;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.projetopratico.cqp.dto.MontadoraDTO;
@@ -18,35 +20,65 @@ import lombok.AllArgsConstructor;
 public class MontadoraService {
     private final MontadoraRepository montadoraRepository;
 
-    public Montadora create(MontadoraDTO montadoraDTO) {
-        Montadora montadora = montadoraDTO.toEntity();
-        return this.montadoraRepository.save(montadora);
+    @Async
+    public CompletableFuture<Montadora> create(MontadoraDTO montadoraDTO) {
+        try {
+            Montadora montadora = montadoraDTO.toEntity();
+            return CompletableFuture.completedFuture(this.montadoraRepository.save(montadora));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return CompletableFuture.failedFuture(e);
+        }
     }
 
-    public List<Montadora> listAll() {
-        List<Montadora> montadoras = montadoraRepository.findAll();
-        return montadoras.stream().collect(Collectors.toList());
+    @Async
+    public CompletableFuture<List<Montadora>> listAll() {
+        try {
+            List<Montadora> montadoras = montadoraRepository.findAll();
+            return CompletableFuture.completedFuture(montadoras.stream().collect(Collectors.toList()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return CompletableFuture.failedFuture(e);
+        }
     }
 
-    public Montadora getById(int id) {
-        return this.montadoraRepository.findById(id).orElse(null);
+    @Async
+    public CompletableFuture<Montadora> getById(int id) {
+        try {
+            return CompletableFuture.completedFuture(this.montadoraRepository.findById(id).orElse(null));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return CompletableFuture.failedFuture(e);
+        }
     }
 
-    public Montadora update(int id, @Valid MontadoraDTO montadoraDTO) {
-        Montadora montadora = montadoraRepository.findById(id).orElse(null);
-        if (montadora != null) {
-            Montadora updateMontadora = montadoraDTO.toEntityUpdate(montadora);
-            return this.montadoraRepository.save(updateMontadora);
+    @Async
+    public CompletableFuture<Montadora> update(int id, @Valid MontadoraDTO montadoraDTO) {
+        try {
+            Montadora montadora = montadoraRepository.findById(id).orElse(null);
+            if (montadora != null) {
+                Montadora updateMontadora = montadoraDTO.toEntityUpdate(montadora);
+                return CompletableFuture.completedFuture(this.montadoraRepository.save(updateMontadora));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return CompletableFuture.failedFuture(e);
         }
         return null;
     }
 
-    public boolean delete(int id) {
-        Montadora montadora = this.montadoraRepository.findById(id).orElse(null);
-        if (montadora != null) {
-            this.montadoraRepository.delete(montadora);
-            return true;
+    @Async
+    public CompletableFuture<Boolean> delete(int id) {
+        try {
+            Montadora montadora = this.montadoraRepository.findById(id).orElse(null);
+            if (montadora != null) {
+                this.montadoraRepository.delete(montadora);
+                return CompletableFuture.completedFuture(true);
+            }
+            return CompletableFuture.completedFuture(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return CompletableFuture.failedFuture(e);
         }
-        return false;
     }
 }

@@ -1,6 +1,7 @@
 package com.projetopratico.cqp.controllers;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,6 @@ import com.projetopratico.cqp.models.Carro;
 import com.projetopratico.cqp.services.CarroService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -33,50 +32,52 @@ public class CarroController {
     private final CarroService carroService;
 
     @Operation(summary = "Request GET", description = "Traz todos os carros do DB")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "GET com sucesso") })
     @GetMapping
-    public ResponseEntity<List<Carro>> listAll() {
-        List<Carro> listCarros = this.carroService.listAll();
-        return new ResponseEntity<>(listCarros, HttpStatus.OK);
+    public CompletableFuture<ResponseEntity<List<Carro>>> listAll() {
+        return carroService.listAll()
+                .thenApply(carros -> ResponseEntity.ok().body(carros))
+                .exceptionally(ex -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
     @Operation(summary = "Request POST", description = "Insere um carro no DB")
-    @ApiResponses(value = { @ApiResponse(responseCode = "201", description = "POST com sucesso") })
     @PostMapping
-    public ResponseEntity<Carro> create(@RequestBody @Valid CarroDTO carroDTO) {
-        Carro carro = carroService.create(carroDTO);
-        return new ResponseEntity<>(carro, HttpStatus.CREATED);
+    public CompletableFuture<ResponseEntity<Carro>> create(@RequestBody @Valid CarroDTO carroDTO) {
+        return carroService.create(carroDTO)
+                .thenApply(carroCreate -> new ResponseEntity<>(carroCreate, HttpStatus.CREATED))
+                .exceptionally(ex -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
     @Operation(summary = "Request GET BY ID", description = "Busca um carro por id")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "GET BY ID com sucesso") })
     @GetMapping("/{id}")
-    public ResponseEntity<Carro> getById(@PathVariable int id) {
-        Carro carro = this.carroService.getById(id);
-        if (carro != null) {
-            return new ResponseEntity<>(carro, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public CompletableFuture<ResponseEntity<Carro>> getById(@PathVariable int id) {
+        return carroService.getById(id)
+                .thenApply(carroById -> {
+                    if (carroById != null) {
+                        return new ResponseEntity<>(carroById, HttpStatus.OK);
+                    }
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                });
     }
 
     @Operation(summary = "Request PUT", description = "Atualiza um carro")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "PUT com sucesso") })
     @PutMapping("/{id}")
-    public ResponseEntity<Carro> update(@PathVariable int id, @RequestBody @Valid CarroDTO carroDTO) {
-        Carro carro = carroService.update(id, carroDTO);
-        if (carro != null) {
-            return new ResponseEntity<>(carro, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public CompletableFuture<ResponseEntity<Carro>> update(@PathVariable int id,
+            @RequestBody @Valid CarroDTO carroDTO) {
+        return carroService.update(id, carroDTO)
+                .thenApply(carroUpdate -> ResponseEntity.ok().body(carroUpdate))
+                .exceptionally(ex -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
     @Operation(summary = "Request DELETE", description = "Deleta um carro")
-    @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "DELETE com sucesso") })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable int id) {
-        if (carroService.delete(id)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public CompletableFuture<ResponseEntity<?>> delete(@PathVariable int id) {
+        return carroService.delete(id)
+                .thenApply(carroDelete -> {
+                    if (carroDelete) {
+                        return ResponseEntity.ok().build();
+                    } else {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                    }
+                });
     }
 }

@@ -1,12 +1,14 @@
 package com.projetopratico.cqp.services;
 
 import java.time.LocalDate;
+import java.util.concurrent.CompletableFuture;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.projetopratico.cqp.models.Carro;
@@ -22,12 +24,14 @@ public class CrawlerService {
 	private final CarroRepository carroRepository;
 	private final CarroDetalhesRepository carroDetalhesRepository;
 
-	public Carro update(int id) {
+	@Async
+	public CompletableFuture<Carro> update(int id) {
 		WebDriver webDriver = new EdgeDriver();
 
 		try {
 			Carro carro = this.carroRepository.findById(id).orElse(null);
-			CarroDetalhes carroDetalhes = this.carroDetalhesRepository.findById(carro.getCarroDetalhes().getId()).orElse(null);
+			CarroDetalhes carroDetalhes = this.carroDetalhesRepository.findById(carro.getCarroDetalhes().getId())
+					.orElse(null);
 
 			if (carro != null && carroDetalhes != null) {
 				webDriver.navigate().to(carroDetalhes.getUrlDetalhes());
@@ -43,7 +47,8 @@ public class CrawlerService {
 				carro.setPreco(precoUpdate);
 				carro.setUrlImagem(urlImagemUpdate);
 				carro.setDataAtualizacao(LocalDate.now());
-				return this.carroRepository.save(carro);
+
+				return CompletableFuture.completedFuture(this.carroRepository.save(carro));
 			}
 			return null;
 		} finally {

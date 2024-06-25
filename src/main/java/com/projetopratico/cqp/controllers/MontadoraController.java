@@ -1,6 +1,7 @@
 package com.projetopratico.cqp.controllers;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,6 @@ import com.projetopratico.cqp.models.Montadora;
 import com.projetopratico.cqp.services.MontadoraService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -33,50 +32,52 @@ public class MontadoraController {
     private final MontadoraService montadoraService;
 
     @Operation(summary = "Request GET", description = "Traz todos as montadoras do DB")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "GET com sucesso") })
     @GetMapping
-    public ResponseEntity<List<Montadora>> listAll() {
-        List<Montadora> listMontadoras = this.montadoraService.listAll();
-        return new ResponseEntity<>(listMontadoras, HttpStatus.OK);
+    public CompletableFuture<ResponseEntity<List<Montadora>>> listAll() {
+        return montadoraService.listAll()
+                .thenApply(montadoras -> ResponseEntity.ok().body(montadoras))
+                .exceptionally(ex -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
     @Operation(summary = "Request POST", description = "Insere uma montadora no DB")
-    @ApiResponses(value = { @ApiResponse(responseCode = "201", description = "POST com sucesso") })
     @PostMapping
-    public ResponseEntity<Montadora> create(@RequestBody @Valid MontadoraDTO montadoraDTO) {
-        Montadora montadora = montadoraService.create(montadoraDTO);
-        return new ResponseEntity<>(montadora, HttpStatus.CREATED);
+    public CompletableFuture<ResponseEntity<Montadora>> create(@RequestBody @Valid MontadoraDTO montadoraDTO) {
+        return montadoraService.create(montadoraDTO)
+                .thenApply(carroCreate -> new ResponseEntity<>(carroCreate, HttpStatus.CREATED))
+                .exceptionally(ex -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
     @Operation(summary = "Request GET BY ID", description = "Busca uma montadora por id")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "GET BY ID com sucesso") })
     @GetMapping("/{id}")
-    public ResponseEntity<Montadora> getById(@PathVariable int id) {
-        Montadora montadora = this.montadoraService.getById(id);
-        if (montadora != null) {
-            return new ResponseEntity<>(montadora, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public CompletableFuture<ResponseEntity<Montadora>> getById(@PathVariable int id) {
+        return montadoraService.getById(id)
+                .thenApply(montadoraById -> {
+                    if (montadoraById != null) {
+                        return new ResponseEntity<>(montadoraById, HttpStatus.OK);
+                    }
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                });
     }
 
     @Operation(summary = "Request PUT", description = "Atualiza uma montadora")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "PUT com sucesso") })
     @PutMapping("/{id}")
-    public ResponseEntity<Montadora> update(@PathVariable int id, @RequestBody @Valid MontadoraDTO montadoraDTO) {
-        Montadora montadora = montadoraService.update(id, montadoraDTO);
-        if (montadora != null) {
-            return new ResponseEntity<>(montadora, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public CompletableFuture<ResponseEntity<Montadora>> update(@PathVariable int id,
+            @RequestBody @Valid MontadoraDTO montadoraDTO) {
+        return montadoraService.update(id, montadoraDTO)
+                .thenApply(montadoraUpdate -> ResponseEntity.ok().body(montadoraUpdate))
+                .exceptionally(ex -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
-    @Operation(summary = "Request DELETE", description = "Deleta umaa montadora")
-    @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "DELETE com sucesso") })
+    @Operation(summary = "Request DELETE", description = "Deleta uma montadora")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable int id) {
-        if (montadoraService.delete(id)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public CompletableFuture<ResponseEntity<?>> delete(@PathVariable int id) {
+        return montadoraService.delete(id)
+                .thenApply(carroDelete -> {
+                    if (carroDelete) {
+                        return ResponseEntity.ok().build();
+                    } else {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                    }
+                });
     }
 }
