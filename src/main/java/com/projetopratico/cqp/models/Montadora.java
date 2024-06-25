@@ -2,6 +2,8 @@ package com.projetopratico.cqp.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,5 +24,6 @@ public class Montadora extends EntidadeBase {
     private String nome;
 
     @OneToMany(mappedBy = "montadora", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Carro> carros;
 }
