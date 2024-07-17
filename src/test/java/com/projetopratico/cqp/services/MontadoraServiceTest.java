@@ -24,7 +24,7 @@ import com.projetopratico.cqp.models.Montadora;
 import com.projetopratico.cqp.repositories.MontadoraRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class MontadoraServiceTest {
+class MontadoraServiceTest {
 
     @Mock
     private MontadoraRepository montadoraRepository;

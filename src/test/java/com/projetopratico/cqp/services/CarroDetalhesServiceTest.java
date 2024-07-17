@@ -24,7 +24,7 @@ import com.projetopratico.cqp.models.CarroDetalhes;
 import com.projetopratico.cqp.repositories.CarroDetalhesRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class CarroDetalhesServiceTest {
+class CarroDetalhesServiceTest {
 
     @Mock
     private CarroDetalhesRepository carroDetalhesRepository;

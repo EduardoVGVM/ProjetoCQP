@@ -94,7 +94,7 @@ public class CarroServiceTest {
     }
 
     @Test
-    void CreateMontadoraDetalhesException() throws Exception {
+    void CreateMontadoraDetalhesException() {
         when(montadoraRepository.findById(anyInt())).thenReturn(Optional.empty());
         when(carroDetalhesRepository.findById(anyInt())).thenReturn(Optional.empty());
 
