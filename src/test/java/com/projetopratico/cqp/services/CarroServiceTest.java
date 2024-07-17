@@ -64,7 +64,7 @@ public class CarroServiceTest {
     }
 
     @Test
-    public void CreateSuccess() throws Exception {
+    void CreateSuccess() throws Exception {
         Montadora montadora = new Montadora();
         CarroDetalhes carroDetalhes = new CarroDetalhes();
         Carro carro = carroDTO.toEntity(montadora, carroDetalhes);
@@ -80,7 +80,7 @@ public class CarroServiceTest {
     }
 
     @Test
-    public void CreateException() throws Exception {
+    void CreateException() throws Exception {
         when(montadoraRepository.findById(anyInt())).thenThrow(new RuntimeException("Erro ao criar Carro"));
 
         CompletableFuture<Carro> result = carroService.create(carroDTO);
@@ -94,7 +94,7 @@ public class CarroServiceTest {
     }
 
     @Test
-    public void CreateMontadoraDetalhesException() throws Exception {
+    void CreateMontadoraDetalhesException() throws Exception {
         when(montadoraRepository.findById(anyInt())).thenReturn(Optional.empty());
         when(carroDetalhesRepository.findById(anyInt())).thenReturn(Optional.empty());
 
@@ -104,7 +104,7 @@ public class CarroServiceTest {
     }
 
     @Test
-    public void ListAllSuccess() throws Exception {
+    void ListAllSuccess() throws Exception {
         List<Carro> carros = Arrays.asList(new Carro(), new Carro());
 
         when(carroRepository.findAll()).thenReturn(carros);
@@ -116,7 +116,7 @@ public class CarroServiceTest {
     }
 
     @Test
-    public void ListAllException() throws Exception {
+    void ListAllException() throws Exception {
         when(carroRepository.findAll()).thenThrow(new RuntimeException("Erro ao listar todos os Carros"));
 
         CompletableFuture<List<Carro>> result = carroService.listAll();
@@ -130,7 +130,7 @@ public class CarroServiceTest {
     }
 
     @Test
-    public void GetByIdSuccess() throws Exception {
+    void GetByIdSuccess() throws Exception {
         Carro carro = new Carro();
         when(carroRepository.findById(1)).thenReturn(Optional.of(carro));
 
@@ -141,7 +141,7 @@ public class CarroServiceTest {
     }
 
     @Test
-    public void GetByIdException() throws Exception {
+    void GetByIdException() throws Exception {
         when(carroRepository.findById(1)).thenThrow(new RuntimeException("Erro ao listar carro por Id"));
 
         CompletableFuture<Carro> result = carroService.getById(1);
@@ -155,7 +155,7 @@ public class CarroServiceTest {
     }
 
     @Test
-    public void UpdateSuccess() throws Exception {
+    void UpdateSuccess() throws Exception {
         Carro carro = new Carro();
         Montadora montadora = new Montadora();
         CarroDetalhes carroDetalhes = new CarroDetalhes();
@@ -173,7 +173,7 @@ public class CarroServiceTest {
     }
 
     @Test
-    public void UpdateException() throws Exception {
+    void UpdateException() throws Exception {
         when(carroRepository.findById(anyInt())).thenThrow(new RuntimeException("Erro ao atualizar carro"));
 
         CompletableFuture<Carro> result = carroService.update(1, carroDTO);
@@ -187,7 +187,7 @@ public class CarroServiceTest {
     }
 
     @Test
-    public void DeleteSuccess() throws Exception {
+    void DeleteSuccess() throws Exception {
         Carro carro = new Carro();
         when(carroRepository.findById(1)).thenReturn(Optional.of(carro));
         doNothing().when(carroRepository).delete(carro);
@@ -199,7 +199,7 @@ public class CarroServiceTest {
     }
 
     @Test
-    public void DeleteException() throws Exception {
+    void DeleteException() throws Exception {
         when(carroRepository.findById(1)).thenThrow(new RuntimeException("Erro ao deletar carro"));
 
         CompletableFuture<Boolean> result = carroService.delete(1);
