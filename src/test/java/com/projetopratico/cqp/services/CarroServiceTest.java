@@ -2,9 +2,10 @@ package com.projetopratico.cqp.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +22,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.projetopratico.cqp.dto.CarroDTO;
-import com.projetopratico.cqp.dto.CarroDetalhesDTO;
-import com.projetopratico.cqp.dto.MontadoraDTO;
 import com.projetopratico.cqp.models.Carro;
 import com.projetopratico.cqp.models.CarroDetalhes;
 import com.projetopratico.cqp.models.Montadora;
@@ -41,59 +40,12 @@ public class CarroServiceTest {
     private CarroRepository carroRepository;
 
     @InjectMocks
-    private MontadoraService montadoraService;
-    @InjectMocks
-    private CarroDetalhesService carroDetalhesService;
-    @InjectMocks
     private CarroService carroService;
 
-    private Carro carro;
     private CarroDTO carroDTO;
-    private CarroDetalhes carroDetalhes;
-    private CarroDetalhesDTO carroDetalhesDTO;
-    private Montadora montadora;
-    private MontadoraDTO montadoraDTO;
 
     @BeforeEach
     public void setUp() {
-        montadora = Montadora.builder()
-                .id(1)
-                .nome("Toyota")
-                .build();
-
-        montadoraDTO = MontadoraDTO.builder()
-                .nome("Toyota")
-                .build();
-
-        carroDetalhes = CarroDetalhes.builder()
-                .id(1)
-                .urlDetalhes("urlDetalhes")
-                .xpathCor("xpathCor")
-                .xpathModelo("xpathModelo")
-                .xpathNome("xpathNome")
-                .xpathPreco("xpathPreco")
-                .xpathUrlImagem("xpathUrlImagem")
-                .build();
-
-        carroDetalhesDTO = CarroDetalhesDTO.builder()
-                .urlDetalhes("urlDetalhes")
-                .xpathCor("xpathCor")
-                .xpathModelo("xpathModelo")
-                .xpathNome("xpathNome")
-                .xpathPreco("xpathPreco")
-                .xpathUrlImagem("xpathUrlImagem")
-                .build();
-
-        carro = Carro.builder()
-                .id(1)
-                .nome("nome")
-                .modelo("modelo")
-                .cor("cor")
-                .preco(3000)
-                .urlImagem("url")
-                .montadora(montadora)
-                .carroDetalhes(carroDetalhes)
-                .build();
 
         carroDTO = CarroDTO.builder()
                 .nome("nome")
@@ -112,136 +64,151 @@ public class CarroServiceTest {
     }
 
     @Test
-    void CreateSuccess() throws Exception {
+    public void CreateSuccess() throws Exception {
+        Montadora montadora = new Montadora();
+        CarroDetalhes carroDetalhes = new CarroDetalhes();
+        Carro carro = carroDTO.toEntity(montadora, carroDetalhes);
+
+        when(montadoraRepository.findById(carroDTO.getMontadora_id())).thenReturn(Optional.of(montadora));
+        when(carroDetalhesRepository.findById(carroDTO.getCarroDetalhes_id())).thenReturn(Optional.of(carroDetalhes));
         when(carroRepository.save(any(Carro.class))).thenReturn(carro);
 
         CompletableFuture<Carro> result = carroService.create(carroDTO);
 
         assertNotNull(result);
-
-        assertEquals(carro.getNome(), result.get().getNome());
-        assertEquals(carro.getModelo(), result.get().getModelo());
-        assertEquals(carro.getCor(), result.get().getCor());
-        assertEquals(carro.getPreco(), result.get().getPreco());
-        assertEquals(carro.getUrlImagem(), result.get().getUrlImagem());
-        assertEquals(carro.getMontadora(), result.get().getMontadora());
-        assertEquals(carro.getCarroDetalhes(), result.get().getCarroDetalhes());
+        assertEquals(carro, result.get());
     }
 
     @Test
-    void CreateException() throws Exception {
-        when(carroDetalhesRepository.save(any(CarroDetalhes.class)))
-                .thenThrow(new RuntimeException("Erro ao tentar cadastrar Carro"));
+    public void CreateException() throws Exception {
+        when(montadoraRepository.findById(anyInt())).thenThrow(new RuntimeException("Erro ao criar Carro"));
 
-        CompletableFuture<CarroDetalhes> result = carroDetalhesService.create(carroDetalhesDTO);
+        CompletableFuture<Carro> result = carroService.create(carroDTO);
 
         try {
             result.get();
         } catch (ExecutionException e) {
             assertTrue(e.getCause() instanceof RuntimeException);
-            assertTrue(e.getCause().getMessage().contains("Erro ao tentar cadastrar Carro"));
+            assertTrue(e.getCause().getMessage().contains("Erro ao criar Carro"));
         }
     }
 
     @Test
-    void ListAllSuccess() throws Exception {
-        when(carroDetalhesRepository.findAll()).thenReturn(Arrays.asList(carroDetalhes));
+    public void CreateMontadoraDetalhesException() throws Exception {
+        when(montadoraRepository.findById(anyInt())).thenReturn(Optional.empty());
+        when(carroDetalhesRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-        CompletableFuture<List<CarroDetalhes>> result = carroDetalhesService.listAll();
+        CompletableFuture<Carro> result = carroService.create(carroDTO);
 
-        assertNotNull(result);
-        assertEquals(1, result.get().size());
-        assertEquals(carroDetalhes.getUrlDetalhes(), result.get().get(0).getUrlDetalhes());
+        assertNull(result);
     }
 
     @Test
-    void ListAllException() throws Exception {
-        when(carroDetalhesRepository.findAll())
-                .thenThrow(new RuntimeException("Erro ao tentar listar todos os Detalhes"));
+    public void ListAllSuccess() throws Exception {
+        List<Carro> carros = Arrays.asList(new Carro(), new Carro());
 
-        CompletableFuture<List<CarroDetalhes>> result = carroDetalhesService.listAll();
+        when(carroRepository.findAll()).thenReturn(carros);
+
+        CompletableFuture<List<Carro>> result = carroService.listAll();
+
+        assertNotNull(result);
+        assertEquals(carros, result.get());
+    }
+
+    @Test
+    public void ListAllException() throws Exception {
+        when(carroRepository.findAll()).thenThrow(new RuntimeException("Erro ao listar todos os Carros"));
+
+        CompletableFuture<List<Carro>> result = carroService.listAll();
 
         try {
             result.get();
         } catch (ExecutionException e) {
             assertTrue(e.getCause() instanceof RuntimeException);
-            assertTrue(e.getCause().getMessage().contains("Erro ao tentar listar todos os Detalhes"));
+            assertTrue(e.getCause().getMessage().contains("Erro ao listar todos os Carros"));
         }
     }
 
     @Test
-    void GetByIdSuccess() throws Exception {
-        when(carroDetalhesRepository.findById(1)).thenReturn(Optional.of(carroDetalhes));
+    public void GetByIdSuccess() throws Exception {
+        Carro carro = new Carro();
+        when(carroRepository.findById(1)).thenReturn(Optional.of(carro));
 
-        CompletableFuture<CarroDetalhes> result = carroDetalhesService.getById(1);
+        CompletableFuture<Carro> result = carroService.getById(1);
 
         assertNotNull(result);
-        assertEquals(carroDetalhes.getUrlDetalhes(), result.get().getUrlDetalhes());
+        assertEquals(carro, result.get());
     }
 
     @Test
-    void GetByIdException() throws Exception {
-        when(carroDetalhesRepository.findById(1))
-                .thenThrow(new RuntimeException("Erro ao tentar listar os Detalhes por Id"));
+    public void GetByIdException() throws Exception {
+        when(carroRepository.findById(1)).thenThrow(new RuntimeException("Erro ao listar carro por Id"));
 
-        CompletableFuture<CarroDetalhes> result = carroDetalhesService.getById(1);
+        CompletableFuture<Carro> result = carroService.getById(1);
 
         try {
             result.get();
         } catch (ExecutionException e) {
             assertTrue(e.getCause() instanceof RuntimeException);
-            assertTrue(e.getCause().getMessage().contains("Erro ao tentar listar os Detalhes por Id"));
+            assertTrue(e.getCause().getMessage().contains("Erro ao listar carro por Id"));
         }
     }
 
     @Test
-    void UpdateSuccess() throws Exception {
-        when(carroDetalhesRepository.findById(1)).thenReturn(Optional.of(carroDetalhes));
-        when(carroDetalhesRepository.save(any(CarroDetalhes.class))).thenReturn(carroDetalhes);
+    public void UpdateSuccess() throws Exception {
+        Carro existingCarro = new Carro();
+        Montadora montadora = new Montadora();
+        CarroDetalhes carroDetalhes = new CarroDetalhes();
+        Carro updatedCarro = carroDTO.toEntityUpdate(existingCarro, montadora, carroDetalhes);
 
-        CompletableFuture<CarroDetalhes> result = carroDetalhesService.update(1,
-                carroDetalhesDTO);
+        when(carroRepository.findById(1)).thenReturn(Optional.of(existingCarro));
+        when(montadoraRepository.findById(carroDTO.getMontadora_id())).thenReturn(Optional.of(montadora));
+        when(carroDetalhesRepository.findById(carroDTO.getCarroDetalhes_id())).thenReturn(Optional.of(carroDetalhes));
+        when(carroRepository.save(any(Carro.class))).thenReturn(updatedCarro);
+
+        CompletableFuture<Carro> result = carroService.update(1, carroDTO);
 
         assertNotNull(result);
-        assertEquals(carroDetalhes.getUrlDetalhes(), result.get().getUrlDetalhes());
+        assertEquals(updatedCarro, result.get());
     }
 
     @Test
-    void UpdateException() throws Exception {
-        when(carroDetalhesRepository.findById(1)).thenThrow(new RuntimeException("Erro ao tentar atualizar Detalhes"));
+    public void UpdateException() throws Exception {
+        when(carroRepository.findById(anyInt())).thenThrow(new RuntimeException("Erro ao atualizar carro"));
 
-        CompletableFuture<CarroDetalhes> result = carroDetalhesService.update(1,
-                carroDetalhesDTO);
+        CompletableFuture<Carro> result = carroService.update(1, carroDTO);
 
         try {
             result.get();
         } catch (ExecutionException e) {
             assertTrue(e.getCause() instanceof RuntimeException);
-            assertTrue(e.getCause().getMessage().contains("Erro ao tentar atualizar Detalhes"));
+            assertTrue(e.getCause().getMessage().contains("Erro ao atualizar carro"));
         }
     }
 
     @Test
-    void DeleteSuccess() throws Exception {
-        when(carroDetalhesRepository.findById(1)).thenReturn(Optional.of(carroDetalhes));
+    public void DeleteSuccess() throws Exception {
+        Carro carro = new Carro();
+        when(carroRepository.findById(1)).thenReturn(Optional.of(carro));
+        doNothing().when(carroRepository).delete(carro);
 
-        CompletableFuture<Boolean> result = carroDetalhesService.delete(1);
+        CompletableFuture<Boolean> result = carroService.delete(1);
 
         assertNotNull(result);
-        assertEquals(true, result.get());
+        assertTrue(result.get());
     }
 
     @Test
-    void DeleteException() throws Exception {
-        when(carroDetalhesRepository.findById(1)).thenThrow(new RuntimeException("Database error"));
+    public void DeleteException() throws Exception {
+        when(carroRepository.findById(1)).thenThrow(new RuntimeException("Erro ao deletar carro"));
 
-        CompletableFuture<Boolean> result = carroDetalhesService.delete(1);
+        CompletableFuture<Boolean> result = carroService.delete(1);
 
         try {
             result.get();
         } catch (ExecutionException e) {
             assertTrue(e.getCause() instanceof RuntimeException);
-            assertTrue(e.getCause().getMessage().contains("Database error"));
+            assertTrue(e.getCause().getMessage().contains("Erro ao deletar carro"));
         }
     }
 

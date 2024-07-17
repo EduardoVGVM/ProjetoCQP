@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ public class CarroService {
     private final CarroRepository carroRepository;
     private final MontadoraRepository montadoraRepository;
     private final CarroDetalhesRepository carroDetalhesRepository;
+    private static final Logger logger = LoggerFactory.getLogger(CarroService.class);
 
     @Async
     public CompletableFuture<Carro> create(CarroDTO carroDTO) {
@@ -38,7 +41,7 @@ public class CarroService {
                 return CompletableFuture.completedFuture(this.carroRepository.save(carro));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erro ao criar o Carro", e);
             return CompletableFuture.failedFuture(e);
         }
         return null;
@@ -50,7 +53,7 @@ public class CarroService {
             List<Carro> carros = carroRepository.findAll();
             return CompletableFuture.completedFuture(carros.stream().collect(Collectors.toList()));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erro ao listar todos Carros", e);
             return CompletableFuture.failedFuture(e);
         }
     }
@@ -60,7 +63,7 @@ public class CarroService {
         try {
             return CompletableFuture.completedFuture(this.carroRepository.findById(id).orElse(null));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erro ao listar o Carro por Id", e);
             return CompletableFuture.failedFuture(e);
         }
     }
@@ -81,7 +84,7 @@ public class CarroService {
             }
             return null;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erro ao atualizar o Carro", e);
             return CompletableFuture.failedFuture(e);
         }
     }
@@ -96,7 +99,7 @@ public class CarroService {
             }
             return CompletableFuture.completedFuture(false);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erro ao deletar o Carro", e);
             return CompletableFuture.failedFuture(e);
         }
     }

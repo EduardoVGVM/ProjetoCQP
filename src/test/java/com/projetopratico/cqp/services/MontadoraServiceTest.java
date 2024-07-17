@@ -59,7 +59,7 @@ public class MontadoraServiceTest {
         CompletableFuture<Montadora> result = montadoraService.create(montadoraDTO);
 
         assertNotNull(result);
-        assertEquals(montadora.getNome(), result.get().getNome());
+        assertEquals(montadora, result.get());
     }
 
     @Test
@@ -85,7 +85,7 @@ public class MontadoraServiceTest {
 
         assertNotNull(result);
         assertEquals(1, result.get().size());
-        assertEquals(montadora.getNome(), result.get().get(0).getNome());
+        assertEquals(montadora, result.get().get(0));
     }
 
     @Test
@@ -109,7 +109,7 @@ public class MontadoraServiceTest {
         CompletableFuture<Montadora> result = montadoraService.getById(1);
 
         assertNotNull(result);
-        assertEquals(montadora.getNome(), result.get().getNome());
+        assertEquals(montadora, result.get());
     }
 
     @Test
@@ -135,7 +135,7 @@ public class MontadoraServiceTest {
         CompletableFuture<Montadora> result = montadoraService.update(1, montadoraDTO);
 
         assertNotNull(result);
-        assertEquals(montadora.getNome(), result.get().getNome());
+        assertEquals(montadora, result.get());
     }
 
     @Test

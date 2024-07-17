@@ -69,12 +69,7 @@ public class CarroDetalhesServiceTest {
         CompletableFuture<CarroDetalhes> result = carroDetalhesService.create(carroDetalhesDTO);
 
         assertNotNull(result);
-        assertEquals(carroDetalhes.getUrlDetalhes(), result.get().getUrlDetalhes());
-        assertEquals(carroDetalhes.getXpathNome(), result.get().getXpathNome());
-        assertEquals(carroDetalhes.getXpathModelo(), result.get().getXpathModelo());
-        assertEquals(carroDetalhes.getXpathCor(), result.get().getXpathCor());
-        assertEquals(carroDetalhes.getXpathPreco(), result.get().getXpathPreco());
-        assertEquals(carroDetalhes.getXpathUrlImagem(), result.get().getXpathUrlImagem());
+        assertEquals(carroDetalhes, result.get());
     }
 
     @Test
@@ -100,7 +95,7 @@ public class CarroDetalhesServiceTest {
 
         assertNotNull(result);
         assertEquals(1, result.get().size());
-        assertEquals(carroDetalhes.getUrlDetalhes(), result.get().get(0).getUrlDetalhes());
+        assertEquals(carroDetalhes, result.get().get(0));
     }
 
     @Test
@@ -125,7 +120,7 @@ public class CarroDetalhesServiceTest {
         CompletableFuture<CarroDetalhes> result = carroDetalhesService.getById(1);
 
         assertNotNull(result);
-        assertEquals(carroDetalhes.getUrlDetalhes(), result.get().getUrlDetalhes());
+        assertEquals(carroDetalhes, result.get());
     }
 
     @Test
@@ -152,7 +147,7 @@ public class CarroDetalhesServiceTest {
                 carroDetalhesDTO);
 
         assertNotNull(result);
-        assertEquals(carroDetalhes.getUrlDetalhes(), result.get().getUrlDetalhes());
+        assertEquals(carroDetalhes, result.get());
     }
 
     @Test
