@@ -14,11 +14,14 @@ import com.projetopratico.cqp.repositories.CarroDetalhesRepository;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class CarroDetalhesService {
     private final CarroDetalhesRepository carroDetalhesRepository;
+    private static final Logger logger = LoggerFactory.getLogger(CarroDetalhesService.class);
 
     @Async
     public CompletableFuture<CarroDetalhes> create(CarroDetalhesDTO carroDetalhesDTO) {
@@ -70,7 +73,7 @@ public class CarroDetalhesService {
     @Async
     public CompletableFuture<Boolean> delete(int id) {
         try {
-           CarroDetalhes carroDetalhes = this.carroDetalhesRepository.findById(id).orElse(null);
+            CarroDetalhes carroDetalhes = this.carroDetalhesRepository.findById(id).orElse(null);
             if (carroDetalhes != null) {
                 this.carroDetalhesRepository.delete(carroDetalhes);
                 return CompletableFuture.completedFuture(true);

@@ -14,11 +14,14 @@ import com.projetopratico.cqp.repositories.MontadoraRepository;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class MontadoraService {
     private final MontadoraRepository montadoraRepository;
+    private static final Logger logger = LoggerFactory.getLogger(MontadoraService.class);
 
     @Async
     public CompletableFuture<Montadora> create(MontadoraDTO montadoraDTO) {
@@ -26,7 +29,7 @@ public class MontadoraService {
             Montadora montadora = montadoraDTO.toEntity();
             return CompletableFuture.completedFuture(this.montadoraRepository.save(montadora));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erro ao criar a montadora", e);
             return CompletableFuture.failedFuture(e);
         }
     }
@@ -37,7 +40,7 @@ public class MontadoraService {
             List<Montadora> montadoras = montadoraRepository.findAll();
             return CompletableFuture.completedFuture(montadoras.stream().collect(Collectors.toList()));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erro ao listar as montadoras", e);
             return CompletableFuture.failedFuture(e);
         }
     }
@@ -47,7 +50,7 @@ public class MontadoraService {
         try {
             return CompletableFuture.completedFuture(this.montadoraRepository.findById(id).orElse(null));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erro ao tentar listar a montadora de id: " + id, e);
             return CompletableFuture.failedFuture(e);
         }
     }
@@ -61,7 +64,7 @@ public class MontadoraService {
                 return CompletableFuture.completedFuture(this.montadoraRepository.save(updateMontadora));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erro ao tentar atualizar a montadora", e);
             return CompletableFuture.failedFuture(e);
         }
         return null;
@@ -77,7 +80,7 @@ public class MontadoraService {
             }
             return CompletableFuture.completedFuture(false);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erro ao deletar a montadora", e);
             return CompletableFuture.failedFuture(e);
         }
     }
