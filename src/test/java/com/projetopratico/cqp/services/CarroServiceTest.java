@@ -156,20 +156,20 @@ public class CarroServiceTest {
 
     @Test
     public void UpdateSuccess() throws Exception {
-        Carro existingCarro = new Carro();
+        Carro carro = new Carro();
         Montadora montadora = new Montadora();
         CarroDetalhes carroDetalhes = new CarroDetalhes();
-        Carro updatedCarro = carroDTO.toEntityUpdate(existingCarro, montadora, carroDetalhes);
+        Carro carroUpdate = carroDTO.toEntityUpdate(carro, montadora, carroDetalhes);
 
-        when(carroRepository.findById(1)).thenReturn(Optional.of(existingCarro));
+        when(carroRepository.findById(1)).thenReturn(Optional.of(carro));
         when(montadoraRepository.findById(carroDTO.getMontadora_id())).thenReturn(Optional.of(montadora));
         when(carroDetalhesRepository.findById(carroDTO.getCarroDetalhes_id())).thenReturn(Optional.of(carroDetalhes));
-        when(carroRepository.save(any(Carro.class))).thenReturn(updatedCarro);
+        when(carroRepository.save(any(Carro.class))).thenReturn(carroUpdate);
 
         CompletableFuture<Carro> result = carroService.update(1, carroDTO);
 
         assertNotNull(result);
-        assertEquals(updatedCarro, result.get());
+        assertEquals(carroUpdate, result.get());
     }
 
     @Test
