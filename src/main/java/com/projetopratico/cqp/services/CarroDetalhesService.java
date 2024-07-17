@@ -29,7 +29,7 @@ public class CarroDetalhesService {
             CarroDetalhes carroDetalhes = carroDetalhesDTO.toEntity();
             return CompletableFuture.completedFuture(this.carroDetalhesRepository.save(carroDetalhes));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erro ao criar os Detalhes", e);
             return CompletableFuture.failedFuture(e);
         }
     }
@@ -40,7 +40,7 @@ public class CarroDetalhesService {
             List<CarroDetalhes> carroDetalhesList = carroDetalhesRepository.findAll();
             return CompletableFuture.completedFuture(carroDetalhesList.stream().collect(Collectors.toList()));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erro ao listar os Detalhes", e);
             return CompletableFuture.failedFuture(e);
         }
     }
@@ -50,7 +50,7 @@ public class CarroDetalhesService {
         try {
             return CompletableFuture.completedFuture(this.carroDetalhesRepository.findById(id).orElse(null));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erro ao listar um Detalhe por Id", e);
             return CompletableFuture.failedFuture(e);
         }
     }
@@ -65,7 +65,7 @@ public class CarroDetalhesService {
             }
             return null;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erro ao atualizar os Detalhes", e);
             return CompletableFuture.failedFuture(e);
         }
     }
@@ -80,7 +80,7 @@ public class CarroDetalhesService {
             }
             return CompletableFuture.completedFuture(false);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Erro ao deletar os Detalhes", e);
             return CompletableFuture.failedFuture(e);
         }
     }
